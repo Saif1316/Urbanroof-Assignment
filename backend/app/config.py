@@ -18,7 +18,10 @@ class Settings(BaseSettings):
     extracted_images_dir: str = "storage/extracted_images"
     generated_reports_dir: str = "storage/generated_reports"
 
-    cors_allow_origins: list[str] = ["http://localhost:5173"]
+    cors_allow_origins: list[str] = [
+        "http://localhost:5173",
+        "https://cheerful-quokka-f00186.netlify.app",
+    ]
 
     # Thermal severity thresholds (degrees C delta vs surrounding baseline)
     thermal_high_severity_delta_c: float = 8.0
