@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Storage (generated/uploaded content)
+backend/storage/uploads/*
+backend/storage/extracted_images/*
+backend/storage/generated_reports/*
+!backend/storage/uploads/.gitkeep
+!backend/storage/extracted_images/.gitkeep
+!backend/storage/generated_reports/.gitkeep
+
+# OS / Editor
+.DS_Store
+.vscode/

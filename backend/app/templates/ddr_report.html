@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Detailed Diagnostic Report - {{ report.report_id }}</title>
+<style>
+    @page {
+        size: A4;
+        margin: 2cm 1.8cm;
+    }
+    body {
+        font-family: Helvetica, Arial, sans-serif;
+        color: #1A1F2B;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+    .header {
+        border-bottom-width: 3px;
+        border-bottom-style: solid;
+        border-bottom-color: #D4622A;
+        padding-bottom: 12px;
+        margin-bottom: 24px;
+    }
+    .eyebrow {
+        color: #D4622A;
+        font-size: 9pt;
+        letter-spacing: 1px;
+        font-weight: bold;
+    }
+    h1 {
+        font-size: 22pt;
+        margin-top: 6px;
+        margin-bottom: 4px;
+    }
+    .report-id {
+        color: #8A8F98;
+        font-size: 9pt;
+    }
+    h2.section-title {
+        font-size: 13pt;
+        color: #D4622A;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: #DDD8CC;
+        padding-bottom: 4px;
+        margin-top: 28px;
+    }
+
+    /* Area block rendered as a single-row, single-column table so the
+       border applies once to the whole card, not to every nested <p>/<div>.
+       xhtml2pdf's box model treats each block-level element as its own
+       bordered box if border properties are set on a generic container,
+       so a table cell is the more reliable unit for a "card" look. */
+    table.area-card {
+        width: 100%;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #DDD8CC;
+        margin-bottom: 14px;
+    }
+    table.area-card td {
+        padding: 12px 16px;
+    }
+
+    /* Severity badge + area name on one line via a 2-column header table,
+       since "float" is not a supported xhtml2pdf CSS property. */
+    table.area-header-row {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+    table.area-header-row td {
+        padding: 0;
+    }
+    .area-name {
+        font-size: 13pt;
+        font-weight: bold;
+    }
+    .severity-badge {
+        padding: 3px 10px;
+        font-size: 8.5pt;
+        font-weight: bold;
+        text-align: center;
+    }
+    .severity-high { background-color: #B0392E; color: white; }
+    .severity-medium { background-color: #D4622A; color: white; }
+    .severity-low { background-color: #3D7A5C; color: white; }
+    .severity-na { background-color: #DDD8CC; color: #1A1F2B; }
+
+    .field-label {
+        font-size: 8.5pt;
+        letter-spacing: 0.3px;
+        color: #8A8F98;
+        font-weight: bold;
+        margin-top: 8px;
+        margin-bottom: 0px;
+    }
+    .field-value {
+        margin-top: 2px;
+        margin-bottom: 0px;
+    }
+    .area-image {
+        width: 320px;
+        margin-top: 10px;
+    }
+    .image-missing-note {
+        color: #8A8F98;
+        font-style: italic;
+        font-size: 9.5pt;
+        margin-top: 8px;
+    }
+    ul.plain-list {
+        margin-top: 6px;
+        margin-bottom: 6px;
+        padding-left: 20px;
+    }
+    ul.plain-list li {
+        margin-bottom: 6px;
+    }
+    .missing-info-block {
+        background-color: #FBF3EC;
+        border-left-width: 3px;
+        border-left-style: solid;
+        border-left-color: #D4622A;
+        padding: 10px 14px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+    .footer-note {
+        margin-top: 36px;
+        padding-top: 10px;
+        border-top-width: 1px;
+        border-top-style: solid;
+        border-top-color: #DDD8CC;
+        font-size: 8.5pt;
+        color: #8A8F98;
+    }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="eyebrow">DETAILED DIAGNOSTIC REPORT</div>
+    <h1>Property Inspection Findings</h1>
+    <div class="report-id">Report ID: {{ report.report_id }}</div>
+</div>
+
+<h2 class="section-title">01 &mdash; Property Issue Summary</h2>
+<p>{{ report.property_issue_summary }}</p>
+
+<h2 class="section-title">02 &mdash; Area-wise Observations</h2>
+{% if report.area_observations %}
+    {% for area in report.area_observations %}
+    <table class="area-card">
+        <tr>
+            <td>
+                <table class="area-header-row">
+                    <tr>
+                        <td style="width: 70%;"><span class="area-name">{{ area.area_name }}</span></td>
+                        <td style="width: 30%; text-align: right;">
+                            {% if area.severity == "High" %}
+                                <span class="severity-badge severity-high">HIGH</span>
+                            {% elif area.severity == "Medium" %}
+                                <span class="severity-badge severity-medium">MEDIUM</span>
+                            {% elif area.severity == "Low" %}
+                                <span class="severity-badge severity-low">LOW</span>
+                            {% else %}
+                                <span class="severity-badge severity-na">NOT AVAILABLE</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="field-label">OBSERVATION</div>
+                <p class="field-value">{{ area.observation }}</p>
+
+                <div class="field-label">PROBABLE ROOT CAUSE</div>
+                <p class="field-value">{{ area.probable_root_cause }}</p>
+
+                <div class="field-label">SEVERITY REASONING</div>
+                <p class="field-value">{{ area.severity_reasoning }}</p>
+
+                <div class="field-label">RECOMMENDED ACTION</div>
+                <p class="field-value">{{ area.recommended_action }}</p>
+
+                {% if area.image_url %}
+                    <img class="area-image" src="{{ area.image_url }}" alt="{{ area.image_caption or area.area_name }}">
+                {% else %}
+                    <p class="image-missing-note">Image Not Available</p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    {% endfor %}
+{% else %}
+    <p>Not Available</p>
+{% endif %}
+
+<h2 class="section-title">03 &mdash; Severity Assessment</h2>
+<p><strong>Overall Severity:</strong> {{ report.overall_severity }}</p>
+<p>{{ report.overall_severity_reasoning }}</p>
+
+<h2 class="section-title">04 &mdash; Recommended Actions</h2>
+{% if report.recommended_actions %}
+<ul class="plain-list">
+    {% for action in report.recommended_actions %}
+    <li>{{ action }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Not Available</p>
+{% endif %}
+
+<h2 class="section-title">05 &mdash; Additional Notes</h2>
+<p>{{ report.additional_notes }}</p>
+
+<h2 class="section-title">06 &mdash; Missing or Unclear Information</h2>
+{% if report.missing_or_unclear_information %}
+    {% for note in report.missing_or_unclear_information %}
+    <div class="missing-info-block">{{ note }}</div>
+    {% endfor %}
+{% else %}
+<p>Not Available</p>
+{% endif %}
+
+<div class="footer-note">
+    This report was generated by an automated diagnostic system based on the supplied inspection
+    and thermal survey documents. Fields marked "Not Available" indicate information that was
+    not present or could not be confidently determined from the source documents.
+</div>
+
+</body>
+</html>
