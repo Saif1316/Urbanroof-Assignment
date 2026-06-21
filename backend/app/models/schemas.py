@@ -25,7 +25,7 @@ class AreaObservation(BaseModel):
     severity_reasoning: str = Field(default=NOT_AVAILABLE)
     recommended_action: str = Field(default=NOT_AVAILABLE)
 
-    image_url: Optional[str] = Field(default=None)
+    image_data_uri: Optional[str] = Field(default=None)
     image_caption: Optional[str] = Field(default=None)
 
     source_documents: list[str] = Field(default_factory=list)

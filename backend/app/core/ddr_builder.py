@@ -85,7 +85,7 @@ def _build_missing_info_notes(
             f"specific area without that information being present in the source document."
         )
 
-    areas_missing_images = [a.area_name for a in areas if a.image_url is None]
+    areas_missing_images = [a.area_name for a in areas if a.image_data_uri is None]
     if areas_missing_images:
         notes.append(
             f"No matching photo was found for the following area(s): "

@@ -182,8 +182,8 @@
                 <div class="field-label">RECOMMENDED ACTION</div>
                 <p class="field-value">{{ area.recommended_action }}</p>
 
-                {% if area.image_url %}
-                    <img class="area-image" src="{{ area.image_url }}" alt="{{ area.image_caption or area.area_name }}">
+                {% if area.image_data_uri %}
+                    <img class="area-image" src="{{ area.image_data_uri }}" alt="{{ area.image_caption or area.area_name }}">
                 {% else %}
                     <p class="image-missing-note">Image Not Available</p>
                 {% endif %}

@@ -26,6 +26,7 @@ from __future__ import annotations
 from app.config import settings
 from app.core.nlp_extractor import InspectionAreaFinding, ThermalReading, group_areas_by_room
 from app.models.schemas import AreaObservation, ExtractedImage
+from app.utils.file_helpers import image_path_to_data_uri
 
 
 def _find_best_image_for_area(
@@ -89,7 +90,7 @@ def build_area_observations(
                 severity=severity,
                 severity_reasoning=severity_reasoning,
                 recommended_action=_recommend_action_from_keywords(observation_text),
-                image_url=matched_image.file_path if matched_image else None,
+                image_data_uri=image_path_to_data_uri(matched_image.file_path) if matched_image else None,
                 image_caption=f"{room_key} - inspection photo" if matched_image else None,
                 source_documents=["inspection_report"],
                 has_conflict=False,

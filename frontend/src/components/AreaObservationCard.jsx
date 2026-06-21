@@ -8,7 +8,7 @@ export default function AreaObservationCard({ area }) {
     severity,
     severity_reasoning,
     recommended_action,
-    image_url,
+    image_data_uri,
     image_caption,
   } = area;
 
@@ -37,9 +37,9 @@ export default function AreaObservationCard({ area }) {
         </div>
 
         <div className="area-card-image">
-          {image_url ? (
+          {image_data_uri ? (
             <>
-              <img src={image_url} alt={image_caption || area_name} />
+              <img src={image_data_uri} alt={image_caption || area_name} />
               {image_caption && (
                 <span className="area-card-image-caption">{image_caption}</span>
               )}
